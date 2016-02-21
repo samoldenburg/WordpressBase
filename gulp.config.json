@@ -1,0 +1,5 @@
+{
+    "browsersync_proxy":"wp.localhost.com",
+    "browsersync_reload":false,
+    "theme_name":"base"
+}

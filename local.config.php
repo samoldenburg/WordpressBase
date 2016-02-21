@@ -8,6 +8,11 @@ define('DB_PASSWORD', 'password_here');
 define('DB_HOST', 'localhost');
 
 /**
+ * WordPress Database Table prefix.
+ */
+$table_prefix  = 'wp_';
+
+/**
  * Local URL settings
  */
 define('WP_HOME', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME']);
@@ -19,6 +24,11 @@ define('FORCE_SSL', false);
  */
 define('WP_CONTENT_DIR', dirname(__FILE__) . '/wp-content');
 define('WP_CONTENT_URL', WP_HOME . '/wp-content' );
+
+/**
+ * Set the default theme
+ */
+define('WP_DEFAULT_THEME', 'base');
 
 /**
  * Debug options

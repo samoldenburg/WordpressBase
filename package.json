@@ -1,0 +1,39 @@
+{
+  "name": "wp",
+  "version": "1.0.0",
+  "description": "A base wordpress project.",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.1",
+    "gulp-util": "^3.0.7"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-prompt": "^0.1.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.2",
+    "gulp.spritesmith": "^6.2.0",
+    "merge-stream": "^1.0.0",
+    "vinyl-buffer": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://samoldenburg:cnvbhf4@github.com/samoldenburg/WordpressBase.git"
+  },
+  "author": "Sam Oldenburg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samoldenburg/WordpressBase/issues"
+  },
+  "homepage": "https://github.com/samoldenburg/WordpressBase#readme"
+}
