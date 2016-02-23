@@ -38,10 +38,7 @@ try {
     var config = require('./gulp.config.json');
 }
 catch (err) {
-    // to be completed.... at the moment this is pretty sloppy, for now lets just yell at you for not having the config file.
-    //gutil.log(err);
-
-
+    // Setup mode
     gutil.log('Configuration file not found. Entering setup mode!');
     gutil.log('Note: Defaults will be used if any line is left blank');
     gutil.log('Note: true/false will be interpretted as booleans. Strings will be used otherwise.');
@@ -62,9 +59,10 @@ catch (err) {
     var db_host = 'localhost';
     var force_ssl = false;
 
+    // setup task, this looks a bit unruly but it does get the job done.
     gulp.task('setup', function() {
-        gulp.src('gulp.config.sample.json')
-        .pipe(prompt.confirm('Continue with setup?'))
+        gulp.src('gulp.config.sample.json') // Doesn't actually matter
+        .pipe(prompt.confirm('Continue with setup?')) // Give them the option to back out now
         .pipe(prompt.prompt({
             type: 'input',
             name: 'val',
@@ -162,6 +160,7 @@ catch (err) {
 }
 
 if (config) {
+    // src paths
     var paths = {
         sprites: './src/sprites/**/*.png',
         sprites2x: './src/sprites/**/*@2x.png',
