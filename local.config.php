@@ -41,7 +41,6 @@ define('WP_DEBUG_LOG', false);
 define('WP_MEMORY_LIMIT', '32M'); // Increase for complex sites
 
 /**
- * Force SSL options
  * Regenerate with {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
  */
 define('AUTH_KEY',         'm{=Ay=84@`Irk QcltSf`dnhn+WsueNuVI3sK*;|#3vc<]Nf5}w]+p,M0~(|5?C9');
