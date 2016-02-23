@@ -5,15 +5,33 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     gutil = require('gulp-util'),
     imagemin = require('gulp-imagemin'),
+    jeditor = require("gulp-json-editor"),
     merge = require('merge-stream'),
     notify = require('gulp-notify'),
     plumber = require('gulp-plumber'),
     prompt = require('gulp-prompt'),
     rename = require('gulp-rename'),
+    replace = require('gulp-replace'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     spritesmith = require('gulp.spritesmith'),
     uglify = require('gulp-uglify');
+
+// just to help with booleans
+function interpretBooleanInput(string) {
+    if (string == "true")
+        return true;
+    if (string == "false")
+        return false;
+    return string;
+}
+
+// for true/false only...
+function interpretBooleanOnlyInput(string) {
+    if (string == "true")
+        return true;
+    return false;
+}
 
 // include the config file
 try {
@@ -21,35 +39,126 @@ try {
 }
 catch (err) {
     // to be completed.... at the moment this is pretty sloppy, for now lets just yell at you for not having the config file.
-    gutil.log(err);
+    //gutil.log(err);
 
-    /*
+
     gutil.log('Configuration file not found. Entering setup mode!');
+    gutil.log('Note: Defaults will be used if any line is left blank');
+    gutil.log('Note: true/false will be interpretted as booleans. Strings will be used otherwise.');
 
     gulp.task('default', ['setup'], function() {
 
     });
 
-    var browsersync_proxy = '';
-    var theme_name = '';
+    // gulp.config.json
+    var browsersync_proxy = false;
+    var browsersync_reload = false;
+    var theme_name = 'base';
+
+    // local.config.php
+    var db_name = '';
+    var db_user = 'root';
+    var db_password = '';
+    var db_host = 'localhost';
+    var force_ssl = false;
 
     gulp.task('setup', function() {
-        gulp.src('gulp.config.json.sample')
+        gulp.src('gulp.config.sample.json')
+        .pipe(prompt.confirm('Continue with setup?'))
         .pipe(prompt.prompt({
             type: 'input',
-            name: 'browsersync_proxy',
-            message: 'Browsersync Proxy? (Skip to not use browsersync, else enter your local environment URL for this project)'
+            name: 'val',
+            message: 'Browsersync Proxy? (Default: false)'
         }, function(res){
-            browsersync_proxy = res.browsersync_proxy;
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                browsersync_proxy = interpretted;
         }))
         .pipe(prompt.prompt({
             type: 'input',
-            name: 'theme_name',
-            message: 'Theme name? (Will name the theme folder)'
+            name: 'val',
+            message: 'Reload browsersync instead of injecting styles? (Default: false; Boolean only!)'
         }, function(res){
-            theme_name = res.theme_name;
+            var interpretted = interpretBooleanOnlyInput(res.val)
+            if (interpretted)
+                browsersync_reload = interpretted;
+        }))
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'val',
+            message: 'Theme name? (Default: "base")'
+        }, function(res){
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                theme_name = interpretted;
+        }))
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'val',
+            message: 'Database name? (Default: "")'
+        }, function(res){
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                db_name = interpretted;
+        }))
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'val',
+            message: 'Database user? (Default: "root")'
+        }, function(res){
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                db_user = interpretted;
+        }))
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'val',
+            message: 'Database password? (Default: "")'
+        }, function(res){
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                db_password = interpretted;
+        }))
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'val',
+            message: 'Database host? (Database host: "localhost")'
+        }, function(res){
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                db_host = interpretted;
+        }))
+        .pipe(prompt.prompt({
+            type: 'input',
+            name: 'val',
+            message: 'Force SSL? (Default: false)'
+        }, function(res){
+            var interpretted = interpretBooleanInput(res.val)
+            if (interpretted)
+                force_ssl = interpretted;
+
+            gutil.log("Applying configurations...");
+            gulp.src('gulp.config.sample.json')
+            .pipe(jeditor({
+                "browsersync_proxy":browsersync_proxy,
+                "browsersync_reload":browsersync_reload,
+                "theme_name":theme_name
+            }))
+            .pipe(rename('gulp.config.json'))
+            .pipe(gulp.dest('./'));
+
+            gulp.src('local.config.php')
+            .pipe(replace('{theme_name}', theme_name))
+            .pipe(replace('{db_name}', db_name))
+            .pipe(replace('{db_user}', db_user))
+            .pipe(replace('{db_password}', db_password))
+            .pipe(replace('{db_host}', db_host))
+            .pipe(replace('{force_ssl}', force_ssl))
+            .pipe(gulp.dest('./web'));
+
+            gutil.log("All set! Are you on Windows and using XAMPP? Make sure you run _win_add_host_entry.bat as well!");
         }));
-    });*/
+    });
 }
 
 if (config) {

@@ -2,10 +2,10 @@
 /**
  * MySQL settings - You can get this info from your web host
  */
-define('DB_NAME', 'database_name_here');
-define('DB_USER', 'username_here');
-define('DB_PASSWORD', 'password_here');
-define('DB_HOST', 'localhost');
+define('DB_NAME', '{db_name}');
+define('DB_USER', '{db_user}');
+define('DB_PASSWORD', '{db_password}');
+define('DB_HOST', '{db_host}');
 
 /**
  * WordPress Database Table prefix.
@@ -17,7 +17,7 @@ $table_prefix  = 'wp_';
  */
 define('WP_HOME', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME']);
 define('WP_SITEURL', $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/wordpress/');
-define('FORCE_SSL', false);
+define('FORCE_SSL', {force_ssl});
 
 /**
  * Moving wp-content into the web root
@@ -28,7 +28,7 @@ define('WP_CONTENT_URL', WP_HOME . '/wp-content' );
 /**
  * Set the default theme
  */
-define('WP_DEFAULT_THEME', 'base');
+define('WP_DEFAULT_THEME', '{theme_name}');
 
 /**
  * Debug options
