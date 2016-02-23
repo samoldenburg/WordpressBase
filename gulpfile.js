@@ -32,6 +32,8 @@ gulp.task('help', function() {
     console.log('gulp' + ' ' + 'scripts'.green + '              ' + '# Concat and uglify javascript.'.grey);
     console.log('gulp' + ' ' + 'sprites'.green + '              ' + '# Build sprites (including retina), run imagemin on the results.'.grey);
     console.log('gulp' + ' ' + 'watch'.green + '                ' + '# Default gulp task.'.grey);
+
+    console.log('gulp' + ' ' + 'uninstall'.red + '            ' + '# Remove your configuration files and start over'.grey);
     console.log('');
 });
 
@@ -176,6 +178,17 @@ catch (err) {
             .pipe(replace('{force_ssl}', force_ssl))
             .pipe(gulp.dest('./web'));
 
+            if (theme_name != "base") {
+                // Copy theme files, throw in style.css from the sample.
+                gulp.src(['./src/themes/base/**/*', '!./src/themes/base/style.css'])
+                .pipe(gulp.dest('./src/themes/' + theme_name));
+
+                gulp.src('style.sample.css')
+                .pipe(replace('{theme_name}', theme_name))
+                .pipe(rename('style.css'))
+                .pipe(gulp.dest('./src/themes/' + theme_name));
+            }
+
             gutil.log("All set! Are you on Windows and using XAMPP? Make sure you run _win_add_host_entry.bat as well!");
         }));
     });
@@ -293,6 +306,19 @@ if (config) {
             // Also reload browsersync on theme/plugin changes.
             gulp.watch(paths.themes).on('change', browsersync.reload);
             gulp.watch(paths.plugins).on('change', browsersync.reload);
+        }
+    });
+
+    gulp.task('uninstall', ['clean'], function() {
+        if (config.theme_name != 'base') {
+            return gulp.src(['./src/themes/' + config.theme_name + '/**/*', './gulp.config.json', './web/local.config.php'])
+            .pipe(prompt.confirm('Are you sure? This cannot be undone'))
+            .pipe(clean());
+        }
+        else {
+            return gulp.src(['./gulp.config.json', './web/local.config.php'])
+            .pipe(prompt.confirm('Are you sure? This cannot be undone'))
+            .pipe(clean());
         }
     });
 }
