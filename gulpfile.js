@@ -1,14 +1,15 @@
 var gulp = require('gulp'),
+    argv = require('yargs').argv,
     browsersync = require('browser-sync').create(),
     buffer = require('vinyl-buffer'),
     clean = require('gulp-clean'),
+    colors = require('colors'),
     concat = require('gulp-concat'),
     gutil = require('gulp-util'),
     imagemin = require('gulp-imagemin'),
     jeditor = require("gulp-json-editor"),
     merge = require('merge-stream'),
     notify = require('gulp-notify'),
-    plumber = require('gulp-plumber'),
     prompt = require('gulp-prompt'),
     rename = require('gulp-rename'),
     replace = require('gulp-replace'),
@@ -16,6 +17,23 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     spritesmith = require('gulp.spritesmith'),
     uglify = require('gulp-uglify');
+
+gulp.task('help', function() {
+    console.log('');
+    console.log('Simply run ' + 'gulp'.green + ' to do most things. If you need to run individual tasks, reference the list below.');
+    console.log('gulp' + ' ' + 'setup'.green + '                ' + '# Run the initial config. Only available if not already ran.'.grey);
+    console.log('gulp' + ' ' + 'build'.green + '                ' + '# Build everything.'.grey);
+    console.log('gulp' + ' ' + 'clean'.green + '                ' + '# Clean up built files.'.grey);
+    console.log('gulp' + ' ' + 'copy:themes'.green + '          ' + '# Copy theme files, building styles and scripts along the way.'.grey);
+    console.log('gulp' + ' ' + 'only_copy:themes'.green + '     ' + '# Copy theme files without building anything.'.grey);
+    console.log('gulp' + ' ' + 'copy:plugins'.green + '         ' + '# Copy plugin files, building styles and scripts along the way.'.grey);
+    console.log('gulp' + ' ' + 'only_copy:plugins'.green + '    ' + '# Copy plugin files without building anything.'.grey);
+    console.log('gulp' + ' ' + 'styles'.green + '               ' + '# Render styles, inject to browsersync if available.'.grey);
+    console.log('gulp' + ' ' + 'scripts'.green + '              ' + '# Concat and uglify javascript.'.grey);
+    console.log('gulp' + ' ' + 'sprites'.green + '              ' + '# Build sprites (including retina), run imagemin on the results.'.grey);
+    console.log('gulp' + ' ' + 'watch'.green + '                ' + '# Default gulp task.'.grey);
+    console.log('');
+});
 
 // just to help with booleans
 function interpretBooleanInput(string) {
@@ -33,12 +51,12 @@ function interpretBooleanOnlyInput(string) {
     return false;
 }
 
-// include the config file
+// try to include the config file
 try {
     var config = require('./gulp.config.json');
 }
 catch (err) {
-    // Setup mode
+    // It doesn't exist, setup mode!
     gutil.log('Configuration file not found. Entering setup mode!');
     gutil.log('Note: Defaults will be used if any line is left blank');
     gutil.log('Note: true/false will be interpretted as booleans. Strings will be used otherwise.');
@@ -136,6 +154,9 @@ catch (err) {
                 force_ssl = interpretted;
 
             gutil.log("Applying configurations...");
+
+            // nesting gulp pipes seems like a good idea...
+            // first do the json config with jeditor
             gulp.src('gulp.config.sample.json')
             .pipe(jeditor({
                 "browsersync_proxy":browsersync_proxy,
@@ -145,6 +166,7 @@ catch (err) {
             .pipe(rename('gulp.config.json'))
             .pipe(gulp.dest('./'));
 
+            // Then just replace the bracketed stuff with the variables in local.config.php and move it
             gulp.src('local.config.php')
             .pipe(replace('{theme_name}', theme_name))
             .pipe(replace('{db_name}', db_name))
