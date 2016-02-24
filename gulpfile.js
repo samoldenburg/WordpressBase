@@ -21,6 +21,9 @@ var gulp = require('gulp'),
 gulp.task('help', function() {
     console.log('');
     console.log('Simply run ' + 'gulp'.green + ' to do most things. If you need to run individual tasks, reference the list below.');
+    console.log('');
+    console.log('Pass the -' + 'p'.cyan + ', --' + 'prod'.cyan + ', or --' + 'production'.cyan + ' args to build for production.');
+    console.log('');
     console.log('gulp' + ' ' + 'setup'.green + '                ' + '# Run the initial config. Only available if not already ran.'.grey);
     console.log('gulp' + ' ' + 'build'.green + '                ' + '# Build everything.'.grey);
     console.log('gulp' + ' ' + 'clean'.green + '                ' + '# Clean up built files.'.grey);
@@ -229,7 +232,7 @@ if (config) {
         gulp.src(paths.themes).pipe(gulp.dest(dest_paths.themes));
     });
 
-    gulp.task('only_copy:themes', function() {
+    gulp.task('only_copy:themes', function() { // only_copy is used for watch tasks
         gulp.src(paths.themes).pipe(gulp.dest(dest_paths.themes));
     });
 
@@ -237,13 +240,20 @@ if (config) {
         gulp.src(paths.plugins).pipe(gulp.dest(dest_paths.plugins));
     })
 
-    gulp.task('only_copy:plugins', function() {
+    gulp.task('only_copy:plugins', function() { // only_copy is used for watch tasks
         gulp.src(paths.plugins).pipe(gulp.dest(dest_paths.plugins));
     })
 
     gulp.task('styles', ['clean', 'sprites'], function () {
+        var output = 'expanded';
+        if (argv.p || argv.prod || argv.production) {
+            output = 'compressed';
+        }
+
         return gulp.src(paths.main_style)
-            .pipe(sass())
+            .pipe(sass({
+                outputStyle: output
+            }))
             .on('error', notify.onError(function (error) {
                 return 'Sass Error: ' + error;
             }))
@@ -306,6 +316,8 @@ if (config) {
             // Also reload browsersync on theme/plugin changes.
             gulp.watch(paths.themes).on('change', browsersync.reload);
             gulp.watch(paths.plugins).on('change', browsersync.reload);
+            gulp.watch(paths.scripts).on('change', browsersync.reload);
+            gulp.watch(paths.sprites).on('change', browsersync.reload);
         }
     });
 
