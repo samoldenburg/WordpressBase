@@ -87,12 +87,10 @@ echo:
 echo:
 echo   ### %hostname% ###
 echo   ^<VirtualHost %hostname%:80^>
-echo       DocumentRoot "%~dp0web"
+echo       DocumentRoot "%cd%0web"
 echo       ServerName %hostname%
-echo       ^<Directory "%~dp0web"^>
-echo         AllowOverride All
-echo         Order allow,deny
-echo         allow from all
+echo       ^<Directory "%cd%web"^>
+echo         Require all granted
 echo       ^</Directory^>
 echo   ^</VirtualHost^>
 ) >>C:\xampp\apache\conf\extra\httpd-vhosts.conf
