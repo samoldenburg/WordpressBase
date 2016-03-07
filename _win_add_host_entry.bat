@@ -90,6 +90,7 @@ echo   ^<VirtualHost %hostname%:80^>
 echo       DocumentRoot "%cd%0web"
 echo       ServerName %hostname%
 echo       ^<Directory "%cd%web"^>
+echo         AllowOverride All
 echo         Require all granted
 echo       ^</Directory^>
 echo   ^</VirtualHost^>
